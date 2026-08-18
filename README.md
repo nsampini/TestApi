@@ -15,3 +15,10 @@ Endpoints iniciales:
 - `GET /api/products`
 
 Por defecto corre en `http://localhost:5190`.
+
+## Docker
+
+```powershell
+docker build -t testapi:local .
+docker run --rm -p 5190:8080 testapi:local
+```
