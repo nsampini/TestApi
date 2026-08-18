@@ -26,7 +26,7 @@ env:
   VM_HOST: ${{ secrets.VM_HOST }}
   VM_USER: ${{ secrets.VM_USER }}
   VM_PORT: ${{ secrets.VM_PORT || '22' }}
-  VM_APP_DIR: ${{ secrets.VM_APP_DIR || '/opt/testweb' }}
+  VM_APP_DIR: ${{ secrets.VM_APP_DIR || 'C:/Deploy/TestWeb' }}
 
 jobs:
   build:
@@ -83,13 +83,4 @@ jobs:
       - name: Deploy API on VM
         if: steps.deploy_config.outputs.enabled == 'true'
         run: |
-          ssh -i ~/.ssh/vm_key -p "$VM_PORT" "$VM_USER@$VM_HOST" "
-            set -e
-            cd '$VM_APP_DIR'
-            if [ -n '${{ secrets.GHCR_TOKEN }}' ]; then
-              echo '${{ secrets.GHCR_TOKEN }}' | docker login ghcr.io -u '${{ secrets.GHCR_USERNAME || github.repository_owner }}' --password-stdin
-            fi
-            docker compose pull api
-            docker compose up -d --remove-orphans --scale api=$API_REPLICAS --scale web=$WEB_REPLICAS
-            docker image prune -f
-          "
+          ssh -i ~/.ssh/vm_key -p "$VM_PORT" "$VM_USER@$VM_HOST" "powershell -NoProfile -ExecutionPolicy Bypass -Command \"`$ErrorActionPreference = 'Stop'; Set-Location '$VM_APP_DIR'; if ('${{ secrets.GHCR_TOKEN }}') { '${{ secrets.GHCR_TOKEN }}' | docker login ghcr.io -u '${{ secrets.GHCR_USERNAME || github.repository_owner }}' --password-stdin }; docker compose pull api; docker compose up -d --remove-orphans --scale api=$API_REPLICAS --scale web=$WEB_REPLICAS; docker image prune -f\""
