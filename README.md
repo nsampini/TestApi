@@ -30,3 +30,7 @@ ghcr.io/nsampini/testapi:latest
 ```
 
 Para deploy automatico desde este repo, configurar los mismos secretos SSH en GitHub Actions que usa el repo `TestWeb`.
+
+## Estado del repositorio
+
+Repositorio creado y operativo: build local, Docker y deploy automatico a `main` configurados (ver secciones anteriores). Sumado al Project "Project Api Github" para seguimiento de issues.
